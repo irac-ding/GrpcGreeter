@@ -1,0 +1,38 @@
+syntax = "proto3";
+
+option csharp_namespace = "GrpcGreeter";
+
+package Customer;
+
+import "google/protobuf/Timestamp.proto";
+
+service Manager {
+	rpc Add (NewCustomer) returns (CustomerEntry);
+
+	rpc Delete (DeleteCustomer) returns (CustomerDeleted);
+
+}
+
+message DeleteCustomer {
+	string id = 1;
+}
+
+message CustomerDeleted {
+	string id = 1;
+	string full_name = 2;
+	google.protobuf.Timestamp date_deleted = 3;
+}
+
+message NewCustomer {
+	string first_name = 1;
+	string last_name = 2;
+	string email = 3;
+}
+
+message CustomerEntry {
+	string id = 1;
+	string first_name = 2;
+	string last_name = 3;
+	string email = 4;
+	google.protobuf.Timestamp date_added = 5;
+}
