@@ -4,7 +4,6 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
-
   <ItemGroup>
     <Compile Remove="Protos\**" />
     <EmbeddedResource Remove="Protos\**" />
@@ -21,13 +20,9 @@
     </PackageReference>
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
   </ItemGroup>
-
   <ItemGroup>
-    <Protobuf Include="..\GrpcGreeter\Protos\customer.proto" GrpcServices="Client">
-      <Link>Protos\customer.proto</Link>
-    </Protobuf>
-    <Protobuf Include="..\GrpcGreeter\Protos\greet.proto" GrpcServices="Client">
-      <Link>Protos\greet.proto</Link>
+    <Protobuf Include="..\GrpcDemoServer\Protos\Hello.proto" GrpcServices="Client">
+      <Link>Protos\Hello.proto</Link>
     </Protobuf>
   </ItemGroup>
 </Project>

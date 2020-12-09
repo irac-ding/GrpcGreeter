@@ -1,9 +1,9 @@
 ﻿{
   "profiles": {
-    "GrpcGreeter": {
+    "GrpcDemoServer": {
       "commandName": "Project",
       "launchBrowser": false,
-      "applicationUrl": "http://localhost:5001",
+      "applicationUrl": "http://localhost:5002",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
