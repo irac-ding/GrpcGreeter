@@ -13,7 +13,7 @@ namespace GrpcAgoraEncoderClient
            // This switch must be set before creating the GrpcChannel/ HttpClient.
            AppContext.SetSwitch("System.Net.Http.SocketsHttpHandler.Http2UnencryptedSupport", true);
             
-            var channel = GrpcChannel.ForAddress("http://10.12.23.123:56790");
+            var channel = GrpcChannel.ForAddress("http://127.0.0.1:56790");
             var Client = new AgoraEncoderMaster.AgoraEncoderMasterClient(channel);
 
             AsyncServerStreamingCall<ServerMessage> serverMessageReply =  Client.Register(new ClientInfo { ClientId = "irac" });
