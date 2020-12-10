@@ -33,7 +33,7 @@ namespace GrpcAgoraEncoderClient
                 GenericResult genericResult1 = Client.ReportEncoder(new EncoderMessage { ClientId = "R-Gallery-941135995144", Timestamp = 1234 });
                 GenericResult genericResult2 = Client.ReportEncodingStatus(new EncodingStatusMessage { ClientId = "R-Gallery-941135995144", Data = i.ToString() + "test" });
             }
-          
+            Console.ReadLine();
         }
     }
 }
