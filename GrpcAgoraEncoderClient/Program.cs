@@ -18,10 +18,10 @@ namespace GrpcAgoraEncoderClient
 
             for (int i = 0; i <= 10; i++)
             {
-                GenericResult genericResult1 = Client.ReportEncoder(new EncoderMessage { ClientId = "irac", Timestamp = 1234 });
-                GenericResult genericResult2 = Client.ReportEncodingStatus(new EncodingStatusMessage { ClientId = "irac", Data = i.ToString() + "test" });
+                GenericResult genericResult1 = Client.ReportEncoder(new EncoderMessage { ClientId = "R-Gallery-941135995144", Timestamp = 1234 });
+                GenericResult genericResult2 = Client.ReportEncodingStatus(new EncodingStatusMessage { ClientId = "R-Gallery-941135995144", Data = i.ToString() + "test" });
             }
-            AsyncServerStreamingCall<ServerMessage> serverMessageReply = Client.Register(new ClientInfo { ClientId = "irac" });
+            AsyncServerStreamingCall<ServerMessage> serverMessageReply = Client.Register(new ClientInfo { ClientId = "R-Gallery-941135995144" });
             while (await serverMessageReply.ResponseStream.MoveNext())
             {
                 Console.WriteLine(serverMessageReply.ResponseStream.Current.Data);
