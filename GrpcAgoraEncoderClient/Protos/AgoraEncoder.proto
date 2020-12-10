@@ -1,0 +1,42 @@
+﻿syntax = "proto3";
+
+package TVU.AgoraEncoder.Contract;
+
+service AgoraEncoderMaster {
+  // Register callback to gRPC server
+  rpc Register (ClientInfo) returns (stream ServerMessage) {}
+  // Report encoding status to gRpc server
+  rpc ReportEncodingStatus (EncodingStatusMessage) returns (GenericResult) {}
+  // Report encoder information to gRpc server
+  rpc ReportEncoder (EncoderMessage) returns (GenericResult) {}
+}
+
+message ClientInfo {
+  string clientId = 1;
+}
+
+message ServerMessage {
+  enum EnumOperation {
+    Switch=0;
+  }
+  string clientId = 1;
+  EnumOperation operation = 2;
+  // Json string, operation parameters
+  string data = 3;
+}
+
+message EncodingStatusMessage {
+  // Used to identity client
+  string clientId = 1;
+  //Json EncodingStatus ,Swich result etc. 
+  string data=2;
+}
+
+message EncoderMessage {
+  // Used to identity client
+  string clientId = 1;
+  uint64 timestamp = 2;
+}
+
+message GenericResult {
+}
