@@ -14,7 +14,7 @@ service CloudDecoderMaster {
 	// report download status to gRPC server
 	rpc ReportDownloadStatus (ReportDownloadStatusMessage) returns (GenericResult) {}
 	// Register Agora Encoder callback to gRPC server
-    rpc RegisterAgoraEncoder (AgoraClientInfo) returns (stream AgoraServerMessage) {}
+    rpc RegisterAgoraEncoder (AgoraEncoderClientInfo) returns (stream AgoraEncoderServerMessage) {}
     // Report Agora encoding status to gRpc server
     rpc ReportAgoraEncodingStatus (AgoraEncodingStatusMessage) returns (GenericResult) {}
     // Report Agora encoder information to gRpc server
@@ -138,11 +138,11 @@ message GenericResult {
 
 
 //AgoraClientInfo
-message AgoraClientInfo {
+message AgoraEncoderClientInfo {
   string clientId = 1;
 }
 
-message AgoraServerMessage {
+message AgoraEncoderServerMessage {
   enum EnumOperation {
     Switch = 0;
   }

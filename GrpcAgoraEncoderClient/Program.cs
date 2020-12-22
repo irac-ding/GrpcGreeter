@@ -20,7 +20,7 @@ namespace GrpcAgoraEncoderClient
 
             Task.Run(async () =>
             {
-                AsyncServerStreamingCall<AgoraServerMessage> serverMessageReply = Client.RegisterAgoraEncoder(new AgoraClientInfo { ClientId = "R-Gallery-941135995144" });
+                AsyncServerStreamingCall<AgoraEncoderServerMessage> serverMessageReply = Client.RegisterAgoraEncoder(new AgoraEncoderClientInfo { ClientId = "R-Gallery-941135995144" });
                 while (await serverMessageReply.ResponseStream.MoveNext())
                 {
                     Console.WriteLine(serverMessageReply.ResponseStream.Current.Data);
