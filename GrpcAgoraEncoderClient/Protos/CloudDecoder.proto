@@ -1,0 +1,166 @@
+syntax = "proto3";
+
+package TVU.CloudDecoder.Contract;
+
+service CloudDecoderMaster {
+	// Register callback to gRPC server
+	rpc RegisterClient (ClientInfo) returns (stream ServerOperationMessage) {}
+	// report media detail to gRPC server
+	rpc ReportMediaDetail (ReportMediaDetailMessage) returns (GenericResult) {}
+	// report thumbnail info to gRPC server
+	rpc ReportThumbnailInfo (ReportThumbnailInfoMessage) returns (GenericResult) {}
+	// report decode status to gRPC server
+	rpc ReportDecodeStatus (ReportDecodeStatusMessage) returns (GenericResult) {}
+	// report download status to gRPC server
+	rpc ReportDownloadStatus (ReportDownloadStatusMessage) returns (GenericResult) {}
+	// Register Agora Encoder callback to gRPC server
+    rpc RegisterAgoraEncoder (AgoraClientInfo) returns (stream AgoraServerMessage) {}
+    // Report Agora encoding status to gRpc server
+    rpc ReportAgoraEncodingStatus (AgoraEncodingStatusMessage) returns (GenericResult) {}
+    // Report Agora encoder information to gRpc server
+    rpc ReportAgoraEncoder (AgoraEncoderMessage) returns (GenericResult) {}
+}
+
+// Basic client information
+message ClientInfo {
+	string clientId = 1;
+	string outputUrl = 2;
+}
+
+// Exit in any state
+message RequestExitMessage{
+	string clientId = 1;
+}
+
+// Basic play command
+message RequestPlayOpMessage{
+	string clientId = 1;
+	enum EnumPlayOperation {
+		PLAY = 0;
+		PAUSE = 1;
+		STOP = 2;
+	}
+	EnumPlayOperation playOp = 2;
+}
+
+// Play with offset
+message RequestOffsetMessage{
+	string clientId = 1;
+	int64 offset = 2;
+	int64 timestamp = 3;
+}
+
+// Loop play
+message RequestLoopMessage{
+	string clientId = 1;
+	bool isLoop = 2;
+}
+
+// for now we don't need to implementate it
+message RequestSpeedMessage{
+	string clientId = 1;
+	double speed = 2;
+}
+
+// Download command
+message RequestDownloadOpMessage{
+	string clientId = 1;
+	enum EnumDownloadOperation {
+		PAUSE = 0;
+		RESUME = 1;
+		RETRY = 2;
+		CANCEL = 3;
+	}
+	EnumDownloadOperation downloadOp = 2;
+}
+
+// Callback message
+message ServerOperationMessage {
+	string clientId = 1;
+	oneof operation{
+		RequestExitMessage requestExitOperation = 2;
+		RequestDownloadOpMessage requestDownloadOperation = 3;
+		RequestPlayOpMessage requestPlayOperation = 4;
+		RequestOffsetMessage requestOffsetOperation = 5;
+		RequestLoopMessage requestLoopOperation = 6;
+		RequestSpeedMessage requestSpeedOperation = 7;
+	}
+}
+
+// for now we only need video length
+message ReportMediaDetailMessage{
+	string clientId = 1;
+	uint64 videoLength = 2;
+	string resolution = 3;
+	double frameRate = 4;
+	int32 audioChannel = 5;
+	int32 audioSampleRate = 6;
+}
+
+message ReportThumbnailInfoMessage{
+	string clientId = 1;
+	string thumbnailSavePath = 2;
+}
+
+message ReportDecodeStatusMessage {
+	string clientId = 1;
+	enum EnumDecodeStatus {
+		INIT = 0;
+		CACHING = 1;
+		STANDBY = 2;
+		PLAYING = 3;
+		PAUSED = 4;
+	}
+	EnumDecodeStatus decodeStatus = 2;
+	int64 offset = 3;
+	bool isLoop = 4;
+	double speed = 5; // for now it will always be 1
+	int64 timestamp = 6;
+}
+
+message ReportDownloadStatusMessage {
+	string clientId = 1;
+	enum EnumDownlodStatus {
+		INIT = 0;
+		DOWNLOADING = 1;
+		PAUSED = 2;
+		COMPLETED = 3;
+		CANCELED = 4;
+		ERROR = 5;
+	}
+	EnumDownlodStatus downloaderStatus = 2;
+	double downloadProgress = 3;
+} 
+
+// TBD
+message GenericResult {
+}
+
+
+//AgoraClientInfo
+message AgoraClientInfo {
+  string clientId = 1;
+}
+
+message AgoraServerMessage {
+  enum EnumOperation {
+    Switch = 0;
+  }
+  string clientId = 1;
+  EnumOperation operation = 2;
+  // Json string, operation parameters
+  string data = 3;
+}
+
+message AgoraEncodingStatusMessage {
+  // Used to identity client
+  string clientId = 1;
+  //Json EncodingStatus ,Swich result etc. 
+  string data = 2;
+}
+
+message AgoraEncoderMessage {
+  // Used to identity client
+  string clientId = 1;
+  uint64 timestamp = 2;
+}
