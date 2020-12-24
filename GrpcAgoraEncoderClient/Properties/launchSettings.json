@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "GrpcAgoraEncoderClient": {
+      "commandName": "Project",
+      "commandLineArgs": "--Grpc_Port 54321 --Client_Id R-Gallery-941135995144"
+    }
+  }
+}

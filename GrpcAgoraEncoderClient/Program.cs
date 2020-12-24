@@ -1,42 +1,37 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using CommandLine;
 using Grpc.Core;
 using Grpc.Net.Client;
+using Newtonsoft.Json;
+using NLog;
 using TVU.CloudDecoder.Contract;
 using static TVU.CloudDecoder.Contract.CloudDecoderMaster;
 
 namespace GrpcAgoraEncoderClient
 {
+    //usage：./GrpcAgoraEncoderClient --Grpc_Port 54321 --Client_Id R-Gallery-941135995144
     class Program
     {
+        #region Log
+        private static Logger logger { get; } = LogManager.GetCurrentClassLogger();
+        #endregion
         static async Task Main(string[] args)
         {
-            // This switch must be set before creating the GrpcChannel/ HttpClient.
-            AppContext.SetSwitch("System.Net.Http.SocketsHttpHandler.Http2UnencryptedSupport", true);
-
-            var channel = GrpcChannel.ForAddress("http://127.0.0.1:54321");
-            CloudDecoderMasterClient Client = new CloudDecoderMasterClient(channel);
-
-            Task.Run(async () =>
+            RecevierCmdOptions option = new RecevierCmdOptions();
+            ParserResult<RecevierCmdOptions> result = Parser.Default.ParseArguments<RecevierCmdOptions>(args).WithParsed(options =>
             {
-                AsyncServerStreamingCall<AgoraEncoderServerMessage> serverMessageReply = Client.RegisterAgoraEncoder(new AgoraEncoderClientInfo { ClientId = "R-Gallery-941135995144" });
-                while (await serverMessageReply.ResponseStream.MoveNext())
-                {
-                    Console.WriteLine(serverMessageReply.ResponseStream.Current.Data);
-                }
+                option.GrpcPort = options.GrpcPort;
+                option.ClientId = options.ClientId;
+            }).WithNotParsed(options =>
+            {
+                logger.Fatal("Application_Startup() parser failed.");
+                Environment.Exit(-2);
             });
-
-
-            for (int i = 0; i <= 10; i++)
-            {
-                GenericResult genericResult2 = Client.ReportAgoraEncodingStatus(new AgoraEncodingStatusMessage { ClientId = "R-Gallery-941135995144", Data = i.ToString() + "test" });
-            }
-            while (1 == 1)
-            {
-                Thread.Sleep(2000);
-                Client.ReportAgoraEncodingStatus(new AgoraEncodingStatusMessage { ClientId = "R-Gallery-941135995144", Data = "{\"LocalNetworkSetting\":{\"NetworkConfigList\":[{\"InterfaceName\":\"em1\",\"InterfaceOrder\":1,\"NickName\":\"LAN1\",\"Bootproto\":2,\"IsUp\":true,\"IsPluginCable\":true,\"MacAddress\":\"98:90:96:BB:8B:33\",\"IPv4IP\":\"10.12.23.123\",\"MaskMapToIPv4\":\"255.255.192.0\",\"IPv4Gateway\":\"10.12.0.254\",\"DnsList\":[\"10.12.0.7\",\"8.8.4.4\"]}]},\"DualRList\":[{\"IsCheckStatus\":false,\"RPath\":\"/opt/tvu/R\",\"InstanceNum\":0,\"IdHex\":\"7BDFB6392B24D763\",\"ProductVersion\":\"7.6.0.7604\",\"ConfigFilePath\":\"/opt/tvu/R/Config.xml\",\"RConfig\":{\"RLocalIP\":\"0.0.0.0\",\"RLocalPort\":8088,\"WebPort\":8288,\"AuthWebUrl\":\"gridservice.tvupack.com\",\"AuthWebPort\":80,\"RPSIP\":\"10.12.22.100\",\"RPSPort\":3970,\"RExternalIP\":\"0.0.0.0\",\"RExternalPort\":8088,\"RUrl\":\"url=0:9999/xyz\",\"PlaybackUrl\":\"http://127.0.0.1:9999/xyz\",\"SwitcherPort\":7001,\"SwitcherIndex\":-1,\"FilterGrpcPort\":50051,\"WSUrlCommandCenterWebSocket\":\"ws://10.12.22.93/tvucc/websocket\",\"NginxLocalPort\":80,\"NginxRootDir\":\"/usr/share/nginx/html\",\"NginxExternalPort\":0,\"OutputFormat\":\"720P50\",\"FecTransportRpcServerPort\":6530,\"ExEncoderStartPort\":30000,\"LiveEncoderStartPort\":32000,\"ProducerStartPort\":33000,\"CategoryName\":\"Core.Macro\",\"ShortName\":\"ReceiverConfig0\"},\"SystemdServiceTVUR\":{\"ServiceName\":\"tvu.r\",\"ActiveState\":1,\"LoadState\":1,\"SubState\":8,\"IsRunning\":true}}]}" });
-            }
+            logger.Info($"Application_Startup() with para: {JsonConvert.SerializeObject(option)}");
+            AgoraEncoderClient agoraEncoderClient = new AgoraEncoderClient(option.GrpcPort, option.ClientId);
+            agoraEncoderClient.Send();
             Console.ReadLine();
         }
     }
