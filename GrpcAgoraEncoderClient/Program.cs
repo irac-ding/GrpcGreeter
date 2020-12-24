@@ -1,13 +1,8 @@
 ﻿using System;
-using System.Threading;
 using System.Threading.Tasks;
 using CommandLine;
-using Grpc.Core;
-using Grpc.Net.Client;
 using Newtonsoft.Json;
 using NLog;
-using TVU.CloudDecoder.Contract;
-using static TVU.CloudDecoder.Contract.CloudDecoderMaster;
 
 namespace GrpcAgoraEncoderClient
 {
