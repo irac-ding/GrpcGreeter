@@ -13,11 +13,12 @@ namespace GrpcDemoClient
         {
             // This switch must be set before creating the GrpcChannel/HttpClient.
             AppContext.SetSwitch("System.Net.Http.SocketsHttpHandler.Http2UnencryptedSupport", true);
-            var httpClientHandler = new HttpClientHandler();
-            // Return `true` to allow certificates that are untrusted/invalid
-            httpClientHandler.ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator;
-            var httpClient = new HttpClient(httpClientHandler);
-            var channel = GrpcChannel.ForAddress("http://10.12.23.123:5002", new GrpcChannelOptions { HttpClient = httpClient });
+            //var httpClientHandler = new HttpClientHandler();
+            //// Return `true` to allow certificates that are untrusted/invalid
+            //httpClientHandler.ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator;
+            //var httpClient = new HttpClient(httpClientHandler);
+            //var channel = GrpcChannel.ForAddress("http://10.12.23.123:9000", new GrpcChannelOptions { HttpClient = httpClient });
+            var channel = GrpcChannel.ForAddress("http://10.12.23.123:9000", new GrpcChannelOptions { Credentials = ChannelCredentials.Insecure });
             var helloClient = new Hello.HelloClient(channel);
             while (true)
             {

@@ -3,7 +3,7 @@
     "GrpcDemoServer": {
       "commandName": "Project",
       "launchBrowser": false,
-      "applicationUrl": "http://*:5002/",
+      "applicationUrl": "http://localhost:9000",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
