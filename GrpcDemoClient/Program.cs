@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Grpc.Core;
 using Grpc.Net.Client;
@@ -12,8 +13,11 @@ namespace GrpcDemoClient
         {
             // This switch must be set before creating the GrpcChannel/HttpClient.
             AppContext.SetSwitch("System.Net.Http.SocketsHttpHandler.Http2UnencryptedSupport", true);
-
-            var channel = GrpcChannel.ForAddress("http://10.12.23.123:5002");
+            var httpClientHandler = new HttpClientHandler();
+            // Return `true` to allow certificates that are untrusted/invalid
+            httpClientHandler.ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator;
+            var httpClient = new HttpClient(httpClientHandler);
+            var channel = GrpcChannel.ForAddress("http://10.12.23.123:5002", new GrpcChannelOptions { HttpClient = httpClient });
             var helloClient = new Hello.HelloClient(channel);
             while (true)
             {
