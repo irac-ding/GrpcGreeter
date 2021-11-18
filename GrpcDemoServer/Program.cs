@@ -26,7 +26,8 @@ namespace GrpcDemoServer
                webBuilder.ConfigureKestrel(options =>
                {
                    // Setup a HTTP/2 endpoint without TLS.
-                   options.Listen(IPAddress.Parse("10.12.23.123"), 9000, o => o.Protocols = HttpProtocols.Http2);
+                   //options.Listen(IPAddress.Parse("10.12.23.123"), 9000, o => o.Protocols = HttpProtocols.Http2);
+                   options.ListenAnyIP(9000, o => o.Protocols = HttpProtocols.Http2);
                });
 
                webBuilder.UseStartup<Startup>();

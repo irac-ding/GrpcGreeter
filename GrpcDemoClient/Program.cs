@@ -13,6 +13,7 @@ namespace GrpcDemoClient
         {
             // This switch must be set before creating the GrpcChannel/HttpClient.
             AppContext.SetSwitch("System.Net.Http.SocketsHttpHandler.Http2UnencryptedSupport", true);
+            //work also
             //var httpClientHandler = new HttpClientHandler();
             //// Return `true` to allow certificates that are untrusted/invalid
             //httpClientHandler.ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator;
